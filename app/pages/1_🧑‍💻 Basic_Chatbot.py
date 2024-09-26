@@ -45,7 +45,7 @@ def render_chat():
                         if (message['content'].startswith('Error:')):
                             st.error(f':anger: :red[{message['content']}]')
                         else:
-                            st.markdown(f'**{message['content']}**')
+                            st.markdown(f':violet[ {message['content']} ] :sparkles:')
 
 
 render_chat()
