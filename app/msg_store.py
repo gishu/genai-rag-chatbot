@@ -9,7 +9,7 @@ def empty():
 
 def init():
     st.session_state.messages = [
-        {'type': 'system', 'content': 'You are a helpful assistant. Use only the provided context to answer any queries in less than 5 sentences'}
+        {'type': 'system', 'content': 'You are a helpful assistant. Answer in english and in less than 5 sentences'}
     ]
 
 def add_message(type, content):
