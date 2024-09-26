@@ -1,13 +1,18 @@
+import os
+
 import streamlit as st
+
+import msg_store
 import chatbot_api as api
-import messages as msg_store
-
-st.set_page_config(page_title='Ragnarok', page_icon=':8ball:')
-
-st.title('AI Chatbot :green[powered by RAG]')
 
 if msg_store.empty():
     msg_store.init()
+
+st.set_page_config(page_title='A Chatbot', page_icon=':8ball:')
+
+st.title('Basic chatbot talking to an :green[LLM]')
+
+st.info("You type in a query. Wait for a few seconds for your answer.")
 
 # Tweak to right align user's messages
 st.html(
@@ -20,8 +25,6 @@ st.html(
 </style>
 """
 )
-
- 
 
 def render_chat():
     with st.container():
@@ -43,7 +46,7 @@ if (user_prompt):
     msg_store.add_message(msg_store.HUMAN, user_prompt)
 
     with st.spinner('On it...'):
-        response = api.ask(user_prompt)
+        response = api.ask( [ (m['type'], m['content']) for m in st.session_state.messages] )
     
     msg_store.add_message(msg_store.AI, response)
 
