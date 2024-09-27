@@ -13,7 +13,7 @@ st.title(':dart: Chatbot powered by :violet[RAG]')
 
 # Prelude
 _api = RagOrchestrator()
-_history = ChatHistory('rag_chat.messages')
+
 
 GOOG_API_KEY = 'GOOGLE_API_KEY'
 if (GOOG_API_KEY in st.secrets):
@@ -21,7 +21,22 @@ if (GOOG_API_KEY in st.secrets):
 
 
 def __initChatMessages():
-    _history = ChatHistory('rag_chat.messages')
+    
+    new_sys_prompt = st.session_state[SYS_PROMPT_KEY]
+    st.toast(new_sys_prompt)
+    del st.session_state[SYS_PROMPT_KEY]
+    _history = ChatHistory('rag_chat.messages', new_sys_prompt)
+
+SYS_PROMPT_KEY = 'rag_chat.system_prompt'
+SYS_PROMPT = '''You are an assistant for question-answering tasks. 
+    Use the pieces of retrieved context to answer the question. 
+    If you don't know the answer, just say that you cannot answer the question.
+    Keep the answer concise and limit to a maximum of 500 words. '''
+
+if SYS_PROMPT_KEY not in st.session_state:
+    st.session_state[SYS_PROMPT_KEY] = SYS_PROMPT
+
+_history = ChatHistory('rag_chat.messages', SYS_PROMPT)
 
 with st.sidebar:
 
@@ -30,7 +45,7 @@ with st.sidebar:
         # if metric is 0, store is empty
         st.metric('Indexed documents', _api.get_documents_count(), delta=None)
 
-        st.text_area('System Prompt', key='system_prompt',
+        st.text_area('System Prompt', key='rag_chat.system_prompt',
                      max_chars=500, on_change=__initChatMessages)
 
         # list messages

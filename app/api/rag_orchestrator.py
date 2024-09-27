@@ -15,7 +15,7 @@ class RagOrchestrator:
 
     def __init__(self):
         self.vector_db = ChromaWrapper()
-        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
+        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3)
 
     def load_pdf(self, data_file):
         '''
