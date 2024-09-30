@@ -37,25 +37,28 @@ if ('pageSetupDone' not in st.session_state):
 
     st.session_state['pageSetupDone'] = True
 
+# see docs.streamlit.io/develop/concepts/architecture/widget-behavior#widgets-do-not-persist-when-not-continually-rendered
+st.session_state["_" + SYS_PROMPT_KEY] = st.session_state[SYS_PROMPT_KEY]
 
 def __initChatMessages():
-
+    
     # clear chat    
-    new_sys_prompt = st.session_state[SYS_PROMPT_KEY]
+
+    #widget state switch - see docs.streamlit.io/develop/concepts/architecture/widget-behavior#widgets-do-not-persist-when-not-continually-rendered
+    new_sys_prompt = st.session_state["_"+SYS_PROMPT_KEY]
+
+    st.session_state[SYS_PROMPT_KEY] = new_sys_prompt
     st.session_state['chatHistory'] = ChatHistory('rag_chat.messages', new_sys_prompt)
 
-
-
 with st.sidebar:
-
-    with st.expander('Advanced', icon=':material/manage_search:'):
+    with st.expander('Advanced', icon=':material/manage_search:', expanded=True):
 
         # if metric is 0, store is empty
         st.metric('Indexed documents', _api.get_documents_count(), delta=None)
-
-        st.text_area('System Prompt', key='rag_chat.system_prompt',
+        
+        st.text_area('System Prompt', key="_"+SYS_PROMPT_KEY,
                      max_chars=500, on_change=__initChatMessages)
-
+        
         # list messages
         st.text('History')
         data = st.session_state['chatHistory'].get_message_tuples()
