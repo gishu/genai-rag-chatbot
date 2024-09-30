@@ -11,14 +11,14 @@ class ChatHistory:
     Backed by streamlit session_state. Volatile.
     '''
 
-    def __init__(self, key, system_prompt='You are a helpful assistant. Answer in english and in less than 5 sentences'):
+    DEFAULT_SYS_PROMPT = 'You are a polite assistant tasked with answering questions. Answer in english and in less than 5 sentences'
+    def __init__(self, key, system_prompt=DEFAULT_SYS_PROMPT):
         ''' Against the specified key,  Initialize an array with a system prompt as the first message in session state '''
 
         self.key = key
-        if not self.__exists():
-            st.session_state[key] = [
-                {'role': 'system', 'content': system_prompt}]
-        
+        st.session_state[key] = [
+            {'role': 'system', 'content': system_prompt}]
+    
 
     def add_human_message(self, content):
         st.session_state[self.key].append({'role': HUMAN, 'content': content})

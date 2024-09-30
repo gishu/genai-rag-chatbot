@@ -11,32 +11,40 @@ st.set_page_config(
 
 st.title(':dart: Chatbot powered by :violet[RAG]')
 
+
+
 # Prelude
 _api = RagOrchestrator()
 
-
+#constants
+SYS_PROMPT_KEY = 'rag_chat.system_prompt'
 GOOG_API_KEY = 'GOOGLE_API_KEY'
-if (GOOG_API_KEY in st.secrets):
-    os.environ[GOOG_API_KEY] = st.secrets[GOOG_API_KEY]
+SYS_PROMPT = '''You are an assistant for question-answering tasks. 
+        Use the pieces of retrieved context to answer the question. 
+        If you don't know the answer, just say that you cannot answer the question.
+        Keep the answer concise and limit to a maximum of 500 words. '''
+    
+
+if ('globalSetupDone' not in st.session_state):
+    if (GOOG_API_KEY in st.secrets):
+        os.environ[GOOG_API_KEY] = st.secrets[GOOG_API_KEY]
+
+    st.session_state['globalSetupDone'] = True
+
+if ('pageSetupDone' not in st.session_state):
+    st.session_state[SYS_PROMPT_KEY] = SYS_PROMPT
+    st.session_state['chatHistory'] = ChatHistory('rag_chat.messages', SYS_PROMPT)
+
+    st.session_state['pageSetupDone'] = True
 
 
 def __initChatMessages():
-    
+
+    # clear chat    
     new_sys_prompt = st.session_state[SYS_PROMPT_KEY]
-    st.toast(new_sys_prompt)
-    del st.session_state[SYS_PROMPT_KEY]
-    _history = ChatHistory('rag_chat.messages', new_sys_prompt)
+    st.session_state['chatHistory'] = ChatHistory('rag_chat.messages', new_sys_prompt)
 
-SYS_PROMPT_KEY = 'rag_chat.system_prompt'
-SYS_PROMPT = '''You are an assistant for question-answering tasks. 
-    Use the pieces of retrieved context to answer the question. 
-    If you don't know the answer, just say that you cannot answer the question.
-    Keep the answer concise and limit to a maximum of 500 words. '''
 
-if SYS_PROMPT_KEY not in st.session_state:
-    st.session_state[SYS_PROMPT_KEY] = SYS_PROMPT
-
-_history = ChatHistory('rag_chat.messages', SYS_PROMPT)
 
 with st.sidebar:
 
@@ -50,7 +58,7 @@ with st.sidebar:
 
         # list messages
         st.text('History')
-        data = _history.get_message_tuples()
+        data = st.session_state['chatHistory'].get_message_tuples()
         st.dataframe(pd.DataFrame(data, columns=['Role', 'Message']))
 
 
@@ -70,7 +78,7 @@ st.html(
 
 def render_chat():
     with st.container():
-        for message in _history.get_messages():
+        for message in st.session_state['chatHistory'].get_messages():
 
             if (not ChatHistory.is_sys_message(message)):
                 if (ChatHistory.is_user_message(message)):
@@ -90,6 +98,8 @@ render_chat()
 user_prompt = st.chat_input("How can I help you?", key='user-prompt')
 if (user_prompt):
     user_prompt = user_prompt.strip()
+
+    _history = st.session_state['chatHistory']
     _history.add_human_message(user_prompt)
 
     try:
