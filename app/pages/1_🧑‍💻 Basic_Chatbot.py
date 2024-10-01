@@ -10,21 +10,17 @@ st.set_page_config(page_title='A Chatbot', page_icon=':8ball:')
 
 st.title('Basic chatbot talking to an :green[LLM]')
 
-GOOG_API_KEY = 'GOOGLE_API_KEY'
 
 # Prelude
 if ('globalSetupDone' not in st.session_state):
-    
+    GOOG_API_KEY = 'GOOGLE_API_KEY'
     if (GOOG_API_KEY in st.secrets):
         os.environ[GOOG_API_KEY] = st.secrets[GOOG_API_KEY]
     
-    OPENAI_API_KEY = 'OPENAI_API_KEY'
-    if (OPENAI_API_KEY in st.secrets):
-        os.environ[OPENAI_API_KEY] = st.secrets[OPENAI_API_KEY]
-
     if (GOOG_API_KEY not in os.environ):
         st.error('Cannot proceed without an API Key (Google)', icon=':material/error:')
         st.stop();
+        
     st.session_state['globalSetupDone'] = True
 
 if ('basic_chat.pageSetupDone' not in st.session_state):
@@ -48,7 +44,7 @@ st.html(
 """
 )
 
-
+st.caption(f':heavy_check_mark: Model {'Gemini 1.5 Flash'}')
 def render_chat():
     with st.container():
         for message in st.session_state['basic_chat.history'].get_messages():

@@ -6,6 +6,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 
 
 class RagOrchestrator:
@@ -13,9 +14,14 @@ class RagOrchestrator:
     Orchestrates various components for RAG
     '''
 
-    def __init__(self):
-        self.vector_db = ChromaWrapper()
-        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3)
+    def __init__(self, model_type, model_temp):
+
+        if model_type.startswith('Google'):
+            self.vector_db = ChromaWrapper()
+            self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=model_temp)
+        else:
+            self.vector_db = ChromaWrapper()
+            self.llm = ChatOpenAI(model='gpt-4o-mini', temperature=model_temp)
 
     def load_pdf(self, data_file):
         '''
@@ -24,18 +30,15 @@ class RagOrchestrator:
         '''
         chunks = pdf_parser.parse_to_chunks(data_file)
 
-        ids = ["Page%s/%s" % (chunk.metadata['page'], index)
-               for index, chunk in enumerate(chunks)]
-
-        items = self.vector_db.store.add_documents(documents=chunks, ids=ids)
+        items = self.vector_db.add(chunks)
         return len(items)
 
     def clear_embeddings(self):
         self.vector_db.clear()
 
     def get_documents_count(self):
-        ''' TEST Function'''
-        return len(self.vector_db.document_count())
+        ''' Returns the count of vectors/embeddings in the DB'''
+        return self.vector_db.document_count()
 
     def ask(self, messages):
         '''
@@ -59,6 +62,9 @@ class RagOrchestrator:
                      | StrOutputParser())
 
         return rag_chain.invoke(user_query)
+
+    def similarity_search(self, query):
+        return self.vector_db.similarity_search(query)
 
     def __context_formatter(relevant_docs):
         ''' 

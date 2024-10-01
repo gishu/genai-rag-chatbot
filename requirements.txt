@@ -5,3 +5,4 @@ langchain-google-genai
 pdfminer.six
 langchain-chroma
 pysqlite3-binary
+langchain-openai
