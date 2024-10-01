@@ -25,7 +25,7 @@ if ('globalSetupDone' not in st.session_state):
 
 if ('basic_chat.pageSetupDone' not in st.session_state):
     st.session_state['basic_chat.history'] = ChatHistory(
-        'rag_chat.messages')
+        'basic_chat.messages')
 
     st.session_state['basic_chat.pageSetupDone'] = True
 
