@@ -8,9 +8,20 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 st.set_page_config(page_title='Ragnarok', page_icon=':technologist:')
 
-st.title('Chatbot demo app')
+st.title('GenAI Chatbots')
 
-st.info('Under Construction')
+st.markdown('''
+### Basic chat
+
+A general chatbot. LLM would answer all queries
+
+            
+### RAG Chatbot
+
+A chatbot that would answer questions pertaining to a specific domain. 
+The specific dataset has to be uploaded as a pdf beforehand.
+            ''')
+
 
 
 

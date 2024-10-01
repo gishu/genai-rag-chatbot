@@ -33,9 +33,6 @@ class ChatHistory:
         return [(m['role'], m['content'])
                                     for m in st.session_state[self.key]]
 
-    def __exists(self):
-        return (self.key in st.session_state)
-    
     def is_sys_message(message):
         return message['role'] == SYSTEM
 
