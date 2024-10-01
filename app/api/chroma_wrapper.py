@@ -1,8 +1,4 @@
 from langchain_chroma import Chroma
-from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
-
-embedding_model = GoogleGenerativeAIEmbeddings(
-    model="models/text-embedding-004")
 
 
 class ChromaWrapper:
@@ -10,7 +6,7 @@ class ChromaWrapper:
         a Vector database to store embeddings and locate relevant docs/chunks
     '''
 
-    def __init__(self):
+    def __init__(self, embedding_model):
         self.store = Chroma(
             collection_name="anamika",
             embedding_function=embedding_model,

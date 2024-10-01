@@ -5,8 +5,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 
 class RagOrchestrator:
@@ -17,10 +17,13 @@ class RagOrchestrator:
     def __init__(self, model_type, model_temp):
 
         if model_type.startswith('Google'):
-            self.vector_db = ChromaWrapper()
-            self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=model_temp)
+            self.vector_db = ChromaWrapper(GoogleGenerativeAIEmbeddings(
+                model="models/text-embedding-004"))
+
+            self.llm = ChatGoogleGenerativeAI(
+                model="gemini-1.5-flash", temperature=model_temp)
         else:
-            self.vector_db = ChromaWrapper()
+            self.vector_db = ChromaWrapper(OpenAIEmbeddings(model="text-embedding-3-small"))
             self.llm = ChatOpenAI(model='gpt-4o-mini', temperature=model_temp)
 
     def load_pdf(self, data_file):
