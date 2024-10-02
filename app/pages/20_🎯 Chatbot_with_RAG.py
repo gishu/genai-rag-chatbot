@@ -144,7 +144,7 @@ def etl_section(api):
         try:
             Path('./tmp-files').mkdir(exist_ok=True)
 
-            with st.spinner('Processing...'):
+            with st.spinner('Create embeddings...'):
                 with open(dest_path.name, mode='wb') as w:
                     w.write(pdfFile.getvalue())
 
@@ -180,7 +180,7 @@ st.html(
 """
 )
 
-st.caption(f':heavy_check_mark: Creating model {
+st.caption(f':heavy_check_mark: Model {
            st.session_state['_rag_chat.modelType']}  (temp={st.session_state['_rag_chat.modelTemp']})')
 
 
