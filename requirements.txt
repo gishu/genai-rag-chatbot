@@ -3,6 +3,12 @@ langchain
 langchain-community
 langchain-google-genai
 pdfminer.six
-langchain-chroma
 pysqlite3-binary
 langchain-openai
+opentelemetry-exporter-otlp-proto-grpc==1.25.0
+opentelemetry-exporter-otlp-proto-common==1.25.0
+opentelemetry-proto==1.25.0
+opentelemetry-sdk==1.25.0
+opentelemetry-api==1.25.0
+langchain-chroma
+
