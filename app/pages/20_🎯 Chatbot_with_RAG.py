@@ -8,10 +8,9 @@ from api.rag_orchestrator import RagOrchestrator
 
 
 st.set_page_config(
-    page_title='BH Investor Assistant', page_icon=':dart:')
+    page_title='QnA Chatbot with RAG', page_icon=':dart:')
 
-st.title(':dart: BH Investor QnA Chatbot')
-st.caption('Using a BH Investor presentation pdf as the dataset here. This could be any collection - new product manuals, internal KnowledgeBase articles, case studies, etc. ')
+st.title(':dart: QnA Chatbot with RAG (POC)')
 
 def __initChatMessages():
 

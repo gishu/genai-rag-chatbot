@@ -1,3 +1,8 @@
 [server]
-
 maxUploadSize = 50
+
+[theme]
+base="light"
+primaryColor="#02a783"
+secondaryBackgroundColor="#f8f8f8"
+textColor="#013025"
